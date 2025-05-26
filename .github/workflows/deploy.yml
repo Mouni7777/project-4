@@ -62,9 +62,13 @@ jobs:
       run: |
         sed -i "s|<IMAGE>|$IMAGE_URI|g" deployment.yaml
 
-    # Setup kubectl
-    - name: Set up kubectl
-      uses: azure/setup-kubectl@v3
+    - name: Install kubectl
+      run: |
+        curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+        chmod +x kubectl
+        sudo mv kubectl /usr/local/bin/
+        kubectl version --client
+
 
     # Update kubeconfig to interact with EKS cluster created by Terraform
     - name: Update kubeconfig
