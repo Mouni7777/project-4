@@ -82,6 +82,11 @@ jobs:
     - name: Update kubeconfig
       run: aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
 
+    - name: Verify kubeconfig and cluster access
+      run: |
+        kubectl config current-context
+        kubectl get nodes
+
     - name: Install yq
       run: |
         sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
@@ -105,13 +110,6 @@ jobs:
         fi
       env:
         KUBECONFIG: $HOME/.kube/config
-    
-
-
-    - name: Verify kubeconfig and cluster access
-      run: |
-        kubectl config current-context
-        kubectl get nodes
 
 
     # Deploy Kubernetes resources
