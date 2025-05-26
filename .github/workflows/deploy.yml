@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: ca-central-1
   ECR_REPOSITORY: springboot-ecr
-  CLUSTER_NAME: springboot-eks
+  CLUSTER_NAME: springboot-eks-cluster
   CONTAINER_NAME: springboot
 
 jobs:
@@ -72,11 +72,7 @@ jobs:
         sudo mv kubectl /usr/local/bin/
         kubectl version --client
 
-    - name: Install aws-iam-authenticator (required for EKS)
-      run: |
-        curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/latest/bin/linux/amd64/aws-iam-authenticator
-        chmod +x aws-iam-authenticator
-        sudo mv aws-iam-authenticator /usr/local/bin/
+
 
     # Update kubeconfig to interact with EKS cluster created by Terraform
     - name: Update kubeconfig
