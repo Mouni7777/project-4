@@ -18,18 +18,6 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    # Terraform Setup & Apply (Create EKS cluster)
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v2
-
-    - name: Terraform Init
-      working-directory: ./terraform
-      run: terraform init
-
-    - name: Terraform Apply
-      working-directory: ./terraform
-      run: terraform apply -auto-approve
-
     # Configure AWS Credentials for other AWS CLI commands
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
