@@ -60,11 +60,6 @@ jobs:
         docker push $IMAGE_URI
         echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
-    - name: Login to Amazon EKS
-      uses: aws-actions/eks-login@v1
-      with:
-        cluster-name: springboot-eks
-
     # Update Kubernetes manifest image with the pushed image URI
     - name: Update K8s manifest
       run: |
@@ -87,11 +82,6 @@ jobs:
     - name: Update kubeconfig
       run: aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
 
-    - name: Verify kubeconfig and cluster access
-      run: |
-        kubectl config current-context
-        kubectl get nodes
-
     - name: Install yq
       run: |
         sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
@@ -99,7 +89,7 @@ jobs:
 
     - name: Patch aws-auth ConfigMap to add GitHub Actions IAM role
       run: |
-        IAM_ROLE_ARN="arn:aws:iam::123456789012:role/github-actions-role"
+        IAM_ROLE_ARN="arn:aws:iam::762233772219:role/github-actions-role"
         
         kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml
 
@@ -115,7 +105,11 @@ jobs:
         fi
       env:
         KUBECONFIG: $HOME/.kube/config
-
+        
+    - name: Verify kubeconfig and cluster access
+      run: |
+        kubectl config current-context
+        kubectl get nodes
 
     # Deploy Kubernetes resources
     - name: Deploy to EKS
