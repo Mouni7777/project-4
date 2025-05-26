@@ -77,7 +77,31 @@ jobs:
         curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/latest/bin/linux/amd64/aws-iam-authenticator
         chmod +x aws-iam-authenticator
         sudo mv aws-iam-authenticator /usr/local/bin/
-          
+
+    - name: Install yq
+      run: |
+        sudo wget https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64 -O /usr/bin/yq
+        sudo chmod +x /usr/bin/yq
+
+    - name: Patch aws-auth ConfigMap to add GitHub Actions IAM role
+      run: |
+        IAM_ROLE_ARN="arn:aws:iam::123456789012:role/github-actions-role"
+        
+        kubectl get configmap aws-auth -n kube-system -o yaml > aws-auth.yaml
+
+        if yq e ".data.mapRoles" aws-auth.yaml | grep -q "$IAM_ROLE_ARN"; then
+          echo "IAM role ARN already exists in aws-auth ConfigMap"
+        else
+          if ! yq e ".data.mapRoles" aws-auth.yaml >/dev/null 2>&1; then
+            yq e '.data.mapRoles = "- rolearn: \"'$IAM_ROLE_ARN'\"\n  username: admin\n  groups:\n    - system:masters"' -i aws-auth.yaml
+          else
+            yq e '.data.mapRoles += "\n- rolearn: \"'$IAM_ROLE_ARN'\"\n  username: admin\n  groups:\n    - system:masters"' -i aws-auth.yaml
+          fi
+          kubectl apply -f aws-auth.yaml
+        fi
+      env:
+        KUBECONFIG: $HOME/.kube/config
+    
     # Update kubeconfig to interact with EKS cluster created by Terraform
     - name: Update kubeconfig
       run: aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
