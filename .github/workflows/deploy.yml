@@ -73,10 +73,10 @@ jobs:
         kubectl version --client
 
     - name: Install aws-iam-authenticator (required for EKS)
-        run: |
-          curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/latest/bin/linux/amd64/aws-iam-authenticator
-          chmod +x aws-iam-authenticator
-          sudo mv aws-iam-authenticator /usr/local/bin/
+      run: |
+        curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/latest/bin/linux/amd64/aws-iam-authenticator
+        chmod +x aws-iam-authenticator
+        sudo mv aws-iam-authenticator /usr/local/bin/
           
     # Update kubeconfig to interact with EKS cluster created by Terraform
     - name: Update kubeconfig
