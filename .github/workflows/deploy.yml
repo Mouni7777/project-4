@@ -41,6 +41,12 @@ jobs:
     - name: Check AWS CLI Version
       run: aws --version
 
+    - name: Install aws-iam-authenticator
+      run: |
+        curl -o aws-iam-authenticator https://amazon-eks.s3.us-west-2.amazonaws.com/latest/bin/linux/amd64/aws-iam-authenticator
+        chmod +x aws-iam-authenticator
+        sudo mv aws-iam-authenticator /usr/local/bin/
+
     # Ensure ECR Repository Exists
     - name: Ensure ECR Repository Exists
       run: |
@@ -71,14 +77,6 @@ jobs:
         chmod +x kubectl
         sudo mv kubectl /usr/local/bin/
         kubectl version --client
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v2
-      with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ env.AWS_REGION }}
-
 
     # Update kubeconfig to interact with EKS cluster created by Terraform
     - name: Update kubeconfig
