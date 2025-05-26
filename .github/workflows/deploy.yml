@@ -72,16 +72,6 @@ jobs:
         sudo mv kubectl /usr/local/bin/
         kubectl version --client
 
-
-
-    # Update kubeconfig to interact with EKS cluster created by Terraform
-    - name: Update kubeconfig
-      run: aws eks update-kubeconfig --region $AWS_REGION --name $CLUSTER_NAME
-
-    - name: Verify kubeconfig and cluster access
-      run: |
-        kubectl get nodes
-
     # Deploy Kubernetes resources
     - name: Deploy to EKS
       run: |
