@@ -60,6 +60,11 @@ jobs:
         docker push $IMAGE_URI
         echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
 
+    - name: Login to Amazon EKS
+      uses: aws-actions/eks-login@v1
+      with:
+        cluster-name: springboot-eks
+
     # Update Kubernetes manifest image with the pushed image URI
     - name: Update K8s manifest
       run: |
