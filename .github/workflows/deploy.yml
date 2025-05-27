@@ -43,7 +43,7 @@ jobs:
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
       run: |
         sonar-scanner \
-          -Dsonar.projectKey=ouni7777 \
+          -Dsonar.projectKey=Mouni7777_project-4 \
           -Dsonar.organization=Mouni7777 \
           -Dsonar.sources=. \
           -Dsonar.java.binaries=target/classes \
