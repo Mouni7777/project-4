@@ -30,14 +30,24 @@ jobs:
     - name: List files in target directory
       run: ls -l target/
 
-    # Run SonarQube analysis
-    - name: SonarQube Scan
-      uses: SonarSource/sonarqube-scan-action@v1.1.0
-      with:
-        projectBaseDir: .
+    - name: Install SonarScanner CLI
+      run: |
+        wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+        unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+        sudo mv sonar-scanner-5.0.1.3006-linux /opt/sonar-scanner
+        sudo ln -s /opt/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+
+    - name: Run SonarQube Analysis with CLI
       env:
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+      run: |
+        sonar-scanner \
+          -Dsonar.projectKey=ouni7777 \
+          -Dsonar.sources=. \
+          -Dsonar.java.binaries=target/classes \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
 
     # Configure AWS Credentials for other AWS CLI commands
     - name: Configure AWS credentials
