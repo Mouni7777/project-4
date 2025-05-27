@@ -30,6 +30,15 @@ jobs:
     - name: List files in target directory
       run: ls -l target/
 
+    # Run SonarQube analysis
+    - name: SonarQube Scan
+      uses: SonarSource/sonarqube-scan-action@v1.1.0
+      with:
+        projectBaseDir: .
+      env:
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
     # Configure AWS Credentials for other AWS CLI commands
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v2
@@ -59,6 +68,25 @@ jobs:
         docker build -t $IMAGE_URI .
         docker push $IMAGE_URI
         echo "IMAGE_URI=$IMAGE_URI" >> $GITHUB_ENV
+
+    - name: Install Trivy
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y wget
+        wget https://github.com/aquasecurity/trivy/releases/latest/download/trivy_0.50.1_Linux-64bit.deb
+        sudo dpkg -i trivy_0.50.1_Linux-64bit.deb
+
+    # Run Trivy Scan and Save Report
+    - name: Run Trivy and Save Report
+      run: |
+        trivy image --severity CRITICAL,HIGH --format table -o trivy-report.txt $IMAGE_URI
+
+    # Upload Trivy Report as Artifact
+    - name: Upload Trivy Report
+      uses: actions/upload-artifact@v4
+      with:
+        name: trivy-report
+        path: trivy-report.txt
 
     # Update Kubernetes manifest image with the pushed image URI
     - name: Update K8s manifest
