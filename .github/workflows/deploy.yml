@@ -44,6 +44,7 @@ jobs:
       run: |
         sonar-scanner \
           -Dsonar.projectKey=ouni7777 \
+          -Dsonar.organization=Mouni7777 \
           -Dsonar.sources=. \
           -Dsonar.java.binaries=target/classes \
           -Dsonar.host.url=$SONAR_HOST_URL \
