@@ -3,12 +3,11 @@ kind: Service
 metadata:
   name: springboot-service
   namespace: default
-  annotations:
-    service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
 spec:
-  type: LoadBalancer
+  type: NodePort         # ALB will target pods by IP via NodePort service
   selector:
     app: springboot
   ports:
-    - port: 80
-      targetPort: 8080
+  - port: 80
+    targetPort: 8080
+    protocol: TCP
