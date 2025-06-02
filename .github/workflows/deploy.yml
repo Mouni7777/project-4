@@ -7,7 +7,7 @@ on:
 env:
   AWS_REGION: ca-central-1
   ECR_REPOSITORY: springboot-ecr
-  CLUSTER_NAME: springboot-eks-cluster
+  CLUSTER_NAME: springboot-eks
   CONTAINER_NAME: springboot
 
 jobs:
