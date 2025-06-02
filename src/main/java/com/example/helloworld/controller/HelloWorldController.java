@@ -6,8 +6,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class HelloWorldController {
 
-    @GetMapping("/")
-    public String home() {
-        return "Spring Boot is alive";
+    @GetMapping("/hello")
+    public String sendGreetings() {
+        return "Hello, World!";
     }
 }
