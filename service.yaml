@@ -2,12 +2,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: springboot-service
-  namespace: default
+  annotations:
+    # Optional for ALB ingress
 spec:
-  type: NodePort         # ALB will target pods by IP via NodePort service
+  type: ClusterIP
   selector:
     app: springboot
   ports:
-  - port: 80
-    targetPort: 8080
-    protocol: TCP
+    - port: 80
+      targetPort: 8080
