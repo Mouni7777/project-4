@@ -7,9 +7,9 @@ metadata:
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/backend-protocol: HTTP
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
-    alb.ingress.kubernetes.io/healthcheck-path: /
+    alb.ingress.kubernetes.io/healthcheck-path: /actuator/health
 spec:
-  ingressClassName: alb  # ✅ RECOMMENDED: use this instead of deprecated annotation
+  ingressClassName: alb  
   rules:
     - http:
         paths:
